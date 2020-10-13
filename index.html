@@ -1,0 +1,66 @@
+<!doctype html>
+<html>
+
+	<head>
+		<title>ratio nightly</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1">
+		<meta charset="utf-8">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+		<script async src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+	</head>
+
+	<body>
+        <main class="container">
+            <h5>県別のカード対応店舗割合</h5>
+            <h6>食べログに掲載してあるカード決済可能店舗を集計しています</h6>
+            <canvas id="myChart"></canvas>
+        </main>
+        <script>
+            var ctx = document.getElementById('myChart');
+            axios(`./ratio.json?timestamp=${new Date().getTime()}`).then(response => {
+                let labels = [];
+                let data = [];
+                let colors = [];
+                Object.keys(response.data).forEach(key => {
+                    labels.push(key)
+                    data.push(response.data[key].card / response.data[key].all * 100)
+                    colors.push(getRandomColor())
+                })
+                var myChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: response.headers["last-modified"],
+                            data: data,
+                            backgroundColor: colors
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true,
+                                    callback: function(value) {
+                                        return value + "%"
+                                    }
+                                }
+                            }]
+                        }
+                    }
+                });
+            })
+            function getRandomColor() {
+                var letters = '0123456789ABCDEF'.split('');
+                var color = '#';
+                for (var i = 0; i < 6; i++ ) {
+                    color += letters[Math.floor(Math.random() * 16)];
+                }
+                return color;
+            }
+        </script>
+    </body>
+
+</html>
