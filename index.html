@@ -1,6 +1,5 @@
 <!doctype html>
 <html>
-
 	<head>
 		<title>ratio nightly</title>
 		<meta name="viewport" content="width=device-width,initial-scale=1">
@@ -8,7 +7,6 @@
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
 		<script async src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 	</head>
 
 	<body>
@@ -19,13 +17,17 @@
         </main>
         <script>
             var ctx = document.getElementById('myChart');
-            axios(`./ratio.json?timestamp=${new Date().getTime()}`).then(response => {
+            let lm;
+            fetch(`./ratio.json?timestamp=${new Date().getTime()}`, {mode: "no-cors"}).then((response) => {
+                lm = response.headers.get('Last-Modified');
+                return response.json();
+            }).then(json => {
                 let labels = [];
                 let data = [];
                 let colors = [];
-                Object.keys(response.data).forEach(key => {
+                Object.keys(json).forEach(key => {
                     labels.push(key)
-                    data.push(response.data[key].card / response.data[key].all * 100)
+                    data.push(json[key].card / json[key].all * 100)
                     colors.push(getRandomColor())
                 })
                 var myChart = new Chart(ctx, {
@@ -33,7 +35,7 @@
                     data: {
                         labels: labels,
                         datasets: [{
-                            label: response.headers["last-modified"],
+                            label: lm,
                             data: data,
                             backgroundColor: colors
                         }]
