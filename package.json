@@ -1,12 +1,12 @@
 {
-  "name": "r",
+  "name": "cash-tabelog",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
+  "devDependencies": {
+    "@types/bun": "^1.0.12"
+  },
   "dependencies": {
     "cheerio": "^1.0.0-rc.12"
-  },
-  "devDependencies": {
-    "@types/node": "^20.6.4"
   }
 }

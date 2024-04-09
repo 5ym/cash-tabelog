@@ -1,18 +1,17 @@
 <!doctype html>
 <html>
 	<head>
-		<title>ratio nightly</title>
+		<title>Cash tabelog</title>
 		<meta name="viewport" content="width=device-width,initial-scale=1">
 		<meta charset="utf-8">
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-		<script async src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+        <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+		<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 	</head>
 
 	<body>
-        <main class="container">
-            <h5>県別のカード対応店舗割合</h5>
-            <h6>食べログに掲載してあるカード決済可能店舗を集計しています</h6>
+        <main class="container mx-auto">
+            <h2 class="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">県別のカード対応店舗割合</h2>
+            <h3 class="scroll-m-20 text-2xl font-semibold tracking-tight">食べログに掲載してあるカード決済可能店舗を集計しています</h3>
             <canvas id="myChart"></canvas>
         </main>
         <script>
