@@ -22,7 +22,11 @@ const VARIANT_QUERY: Record<Variant, string> = {
 
 async function fetchHtml(url: string): Promise<string> {
 	const res = await fetch(url, {
-		headers: { 'user-agent': 'cash-tabelog (+https://github.com/5ym/cash-tabelog)' }
+		headers: {
+			'user-agent':
+				'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36',
+			accept: 'text/html,application/xhtml+xml'
+		}
 	});
 	if (!res.ok) {
 		throw new Error(`${res.status} ${res.statusText}: ${url}`);
