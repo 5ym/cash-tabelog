@@ -8,15 +8,16 @@
 		<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
 	</head>
 
-	<body>
-		<main class="container mx-auto px-4 py-6">
-			<h2 class="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">
-				県別のカード対応店舗割合
-			</h2>
-			<h3 class="scroll-m-20 text-2xl font-semibold tracking-tight">
+	<body class="h-dvh overflow-hidden">
+		<main class="container mx-auto flex h-full flex-col px-4 py-6">
+			<h2 class="border-b pb-2 text-3xl font-semibold tracking-tight">県別のカード対応店舗割合</h2>
+			<h3 class="text-2xl font-semibold tracking-tight">
 				食べログに掲載してあるカード決済可能店舗を集計しています
 			</h3>
-			<canvas id="myChart"></canvas>
+			<!-- チャートは残りの高さにフィットさせ、ページのスクロールを出さない -->
+			<div class="relative min-h-0 flex-1">
+				<canvas id="myChart"></canvas>
+			</div>
 		</main>
 		<script>
 			const ctx = document.getElementById('myChart');
@@ -43,6 +44,7 @@
 							]
 						},
 						options: {
+							maintainAspectRatio: false,
 							scales: {
 								y: {
 									beginAtZero: true,
