@@ -1,0 +1,15 @@
+services:
+  # ratio.json を更新: docker compose run --rm fetch
+  fetch:
+    build: .
+    volumes:
+      - ./:/out
+    command: /app/src/index.ts
+
+  # サイト構造の診断: docker compose run --rm doctor
+  # (セレクタ不一致時は debug.html がカレントに保存される)
+  doctor:
+    build: .
+    volumes:
+      - ./:/out
+    command: /app/src/doctor.ts

@@ -13,10 +13,20 @@
 
 ## 使い方
 
+### Docker(手元に Bun 不要)
+
+```shell
+docker compose run --rm fetch    # ratio.json を更新(カレントに出力)
+docker compose run --rm doctor   # サイト構造の診断
+```
+
+### Bun を直接使う場合
+
 ```shell
 bun install
-bun run fetch   # ratio.json を更新
-bun run check   # 型チェック
+bun run fetch    # ratio.json を更新
+bun run doctor   # サイト構造の診断
+bun run check    # 型チェック
 ```
 
 公開ページ: https://5ym.github.io/cash-tabelog/
