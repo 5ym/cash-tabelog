@@ -1,9 +1,9 @@
 name: Fetch ratio
 
+# 定期実行はオフ(食べログが GitHub ホステッドランナーの IP を 403 で拒否するため)。
+# 手動実行(workflow_dispatch)のみ残している。取得はローカルの
+# `docker compose run --rm fetch` を利用し、push すれば Pages に自動反映される。
 on:
-  schedule:
-    # 毎週月曜 3:00 JST (日曜 18:00 UTC)
-    - cron: '0 18 * * 0'
   workflow_dispatch:
 
 permissions:

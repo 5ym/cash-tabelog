@@ -6,8 +6,7 @@
 - `src/index.ts` — 集計スクリプト(Bun + TypeScript + cheerio)。
   全店舗数とカード対応店舗数(`?ChkCard=1`)を取得し `ratio.json` に書き出します
 - `index.html` — `ratio.json` を Chart.js で描画する静的ページ
-- `.github/workflows/fetch.yml` — **毎週月曜 3:00 JST に自動実行**し、
-  変化があれば `ratio.json` をコミットします(手動実行も可)
+- `.github/workflows/fetch.yml` — 手動実行専用(定期実行はオフ。下記メモ参照)
 - `.github/workflows/deploy.yml` — `index.html` / `ratio.json` の変更を
   **GitHub Pages に自動デプロイ**します
 
@@ -35,8 +34,8 @@ bun run check    # 型チェック
 ## メモ
 
 - リクエストは同時 4 本に制限しています(先方への配慮)
-- **注意**: 食べログは GitHub Actions(データセンターIP)からのアクセスを 403 で拒否するため、
-  定期取得ジョブはホステッドランナーでは失敗します。手元やサーバーで `bun run fetch` を実行して
-  push すれば、Pages への反映は自動で行われます(セルフホステッドランナーでも可)
+- 食べログは GitHub Actions(データセンターIP)からのアクセスを 403 で拒否するため、
+  **定期実行はオフ**にしています(ローカルでは動作確認済み)。
+  `docker compose run --rm fetch` → `git push` で Pages に自動反映されます
 - `ratio.json` の形式は従来と互換です:
   `{ "全国": { "all": "...", "card": "..." }, "北海道": { ... }, ... }`
