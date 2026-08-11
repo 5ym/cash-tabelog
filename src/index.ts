@@ -77,6 +77,13 @@ async function collect(variant: Variant): Promise<{
 	const top = await fetchHtml(BASE_URL + VARIANT_QUERY[variant]);
 	const national = extractCount(top);
 	const links = extractPrefLinks(top);
+	// 200 が返るのにセレクタが空振り → サイト構造の変更を疑う
+	if (!national || links.size === 0) {
+		throw new Error(
+			`セレクタが一致しません(count="${national}", prefLinks=${links.size})。` +
+				'サイト構造が変更された可能性があります。`bun run doctor` で確認してください。'
+		);
+	}
 
 	const entries = [...links.entries()];
 	const counts = await mapWithLimit(entries, CONCURRENCY, async ([name, href]) => {

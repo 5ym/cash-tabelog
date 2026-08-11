@@ -8,7 +8,8 @@
 	"repository": "github:5ym/cash-tabelog",
 	"scripts": {
 		"fetch": "bun run src/index.ts",
-		"check": "bunx tsc --noEmit"
+		"check": "bunx tsc --noEmit",
+		"doctor": "bun run src/doctor.ts"
 	},
 	"dependencies": {
 		"cheerio": "^1.0.0"
