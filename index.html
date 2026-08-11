@@ -1,67 +1,66 @@
 <!doctype html>
-<html>
+<html lang="ja">
 	<head>
 		<title>Cash tabelog</title>
-		<meta name="viewport" content="width=device-width,initial-scale=1">
-		<meta charset="utf-8">
-        <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
-		<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+		<meta name="viewport" content="width=device-width,initial-scale=1" />
+		<meta charset="utf-8" />
+		<script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+		<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
 	</head>
 
 	<body>
-        <main class="container mx-auto">
-            <h2 class="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">県別のカード対応店舗割合</h2>
-            <h3 class="scroll-m-20 text-2xl font-semibold tracking-tight">食べログに掲載してあるカード決済可能店舗を集計しています</h3>
-            <canvas id="myChart"></canvas>
-        </main>
-        <script>
-            var ctx = document.getElementById('myChart');
-            let lm;
-            fetch(`./ratio.json?timestamp=${new Date().getTime()}`, {mode: "no-cors"}).then((response) => {
-                lm = response.headers.get('Last-Modified');
-                return response.json();
-            }).then(json => {
-                let labels = [];
-                let data = [];
-                let colors = [];
-                Object.keys(json).forEach(key => {
-                    labels.push(key)
-                    data.push(json[key].card / json[key].all * 100)
-                    colors.push(getRandomColor())
-                })
-                var myChart = new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: labels,
-                        datasets: [{
-                            label: lm,
-                            data: data,
-                            backgroundColor: colors
-                        }]
-                    },
-                    options: {
-                        scales: {
-                            yAxes: [{
-                                ticks: {
-                                    beginAtZero: true,
-                                    callback: function(value) {
-                                        return value + "%"
-                                    }
-                                }
-                            }]
-                        }
-                    }
-                });
-            })
-            function getRandomColor() {
-                var letters = '0123456789ABCDEF'.split('');
-                var color = '#';
-                for (var i = 0; i < 6; i++ ) {
-                    color += letters[Math.floor(Math.random() * 16)];
-                }
-                return color;
-            }
-        </script>
-    </body>
-
+		<main class="container mx-auto px-4 py-6">
+			<h2 class="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">
+				県別のカード対応店舗割合
+			</h2>
+			<h3 class="scroll-m-20 text-2xl font-semibold tracking-tight">
+				食べログに掲載してあるカード決済可能店舗を集計しています
+			</h3>
+			<canvas id="myChart"></canvas>
+		</main>
+		<script>
+			const ctx = document.getElementById('myChart');
+			fetch(`./ratio.json?timestamp=${Date.now()}`)
+				.then((response) => {
+					const lastModified = response.headers.get('Last-Modified');
+					return response.json().then((json) => ({ json, lastModified }));
+				})
+				.then(({ json, lastModified }) => {
+					const labels = Object.keys(json);
+					const data = labels.map((key) => (json[key].card / json[key].all) * 100);
+					// 都道府県ごとに安定した色相を割り当てる(リロードで変わらない)
+					const colors = labels.map((_l, i) => `hsl(${(i * 137.5) % 360} 70% 60%)`);
+					new Chart(ctx, {
+						type: 'bar',
+						data: {
+							labels,
+							datasets: [
+								{
+									label: lastModified ?? 'カード対応率',
+									data,
+									backgroundColor: colors
+								}
+							]
+						},
+						options: {
+							scales: {
+								y: {
+									beginAtZero: true,
+									ticks: {
+										callback: (value) => `${value}%`
+									}
+								}
+							},
+							plugins: {
+								tooltip: {
+									callbacks: {
+										label: (item) => `${item.parsed.y.toFixed(1)}%`
+									}
+								}
+							}
+						}
+					});
+				});
+		</script>
+	</body>
 </html>

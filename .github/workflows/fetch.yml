@@ -1,0 +1,37 @@
+name: Fetch ratio
+
+on:
+  schedule:
+    # 毎週月曜 3:00 JST (日曜 18:00 UTC)
+    - cron: '0 18 * * 0'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: fetch-ratio
+  cancel-in-progress: false
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - run: bun install --frozen-lockfile
+      - run: bun run check
+      - run: bun run fetch
+      - name: Commit updated ratio.json
+        run: |
+          if git diff --quiet ratio.json; then
+            echo "ratio.json unchanged; nothing to commit"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add ratio.json
+          git commit -m "Update ratio.json ($(date -u +%Y-%m-%d))"
+          git push
