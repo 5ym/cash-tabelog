@@ -8,6 +8,8 @@
 - `index.html` — `ratio.json` を Chart.js で描画する静的ページ
 - `.github/workflows/fetch.yml` — **毎週月曜 3:00 JST に自動実行**し、
   変化があれば `ratio.json` をコミットします(手動実行も可)
+- `.github/workflows/deploy.yml` — `index.html` / `ratio.json` の変更を
+  **GitHub Pages に自動デプロイ**します
 
 ## 使い方
 
@@ -17,11 +19,14 @@ bun run fetch   # ratio.json を更新
 bun run check   # 型チェック
 ```
 
-`index.html` は静的ファイルなのでそのまま配信できます
-(`ratio.json` と同じ場所に置くだけ)。
+公開ページ: https://5ym.github.io/cash-tabelog/
+(`ratio.json` が更新されるたびに自動で再デプロイされます)
 
 ## メモ
 
 - リクエストは同時 4 本に制限しています(先方への配慮)
+- **注意**: 食べログは GitHub Actions(データセンターIP)からのアクセスを 403 で拒否するため、
+  定期取得ジョブはホステッドランナーでは失敗します。手元やサーバーで `bun run fetch` を実行して
+  push すれば、Pages への反映は自動で行われます(セルフホステッドランナーでも可)
 - `ratio.json` の形式は従来と互換です:
   `{ "全国": { "all": "...", "card": "..." }, "北海道": { ... }, ... }`
